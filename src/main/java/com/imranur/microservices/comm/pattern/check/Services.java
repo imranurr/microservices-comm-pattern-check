@@ -6,7 +6,7 @@ public class Services {
 
     private String build;
     private List<String> links;
-    private List<String> dependsOn;
+    private List<String> depends_on;
 
     public String getBuild() {
         return build;
@@ -24,11 +24,11 @@ public class Services {
         this.links = links;
     }
 
-    public List<String> getDependsOn() {
-        return dependsOn;
+    public List<String> getDepends_on() {
+        return depends_on;
     }
 
-    public void setDependsOn(List<String> dependsOn) {
-        this.dependsOn = dependsOn;
+    public void setDepends_on(List<String> depends_on) {
+        this.depends_on = depends_on;
     }
 }

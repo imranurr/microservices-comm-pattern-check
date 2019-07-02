@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Hello world!
+ * Microservices dependency/communication pattern checking
  *
  */
 public class App 
@@ -46,7 +46,7 @@ public class App
         ArrayList<Map<String, Set<String>>> serviceMappings = new ArrayList<>();
 
         if (!serviceLists.isEmpty()) {
-            serviceLists.forEach(System.out::println);
+            //serviceLists.forEach(System.out::println);
             for (String entry : serviceLists){
                 dockerServices.getServices().forEach((s, services) -> {
                     if(entry.equals(s)){
@@ -64,8 +64,14 @@ public class App
                 });
             }
         }
-
-        System.out.println(dockerServices.getServices().size());
+        StringBuilder mapping = new StringBuilder();
+        for (Map<String, Set<String>> entry : serviceMappings){
+            mapping.append(entry.keySet().toString().replace("[", "").replace("]", ""));
+            mapping.append(" --> ");
+            entry.values().forEach(mapping::append);
+            mapping.append("\n");
+        }
+        System.out.println(mapping.toString());
     }
 
 
@@ -78,26 +84,6 @@ public class App
                     .collect(Collectors.toList());
 
         }
-    }
-
-    static List<File> findFile(String name, File file)
-    {
-        ArrayList<File> dockerFiles = new ArrayList<>();
-        File[] list = file.listFiles();
-        if(list!=null)
-            for (File fil : list)
-            {
-                if (fil.isDirectory())
-                {
-                    findFile(name,fil);
-                }
-                else if (name.equalsIgnoreCase(fil.getName()))
-                {
-                    dockerFiles.add(fil);
-                    System.out.println(fil.getParentFile());
-                }
-            }
-        return dockerFiles;
     }
 
 }

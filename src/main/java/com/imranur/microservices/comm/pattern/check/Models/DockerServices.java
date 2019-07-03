@@ -1,4 +1,4 @@
-package com.imranur.microservices.comm.pattern.check;
+package com.imranur.microservices.comm.pattern.check.Models;
 
 import java.util.Map;
 

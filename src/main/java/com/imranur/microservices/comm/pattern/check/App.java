@@ -2,6 +2,10 @@ package com.imranur.microservices.comm.pattern.check;
 
 import com.imranur.microservices.comm.pattern.check.Models.DockerServices;
 import com.imranur.microservices.comm.pattern.check.Utils.DockerComposeUtils;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Session;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -18,6 +22,7 @@ import java.util.*;
  */
 public class App {
     public static void main(String[] args) throws IOException {
+
         Scanner scan = new Scanner(System.in);
         String fileName = "docker-compose.yml";
         System.out.println("Enter project directory to search ");
@@ -54,6 +59,26 @@ public class App {
 
         StringBuilder mapping = DockerComposeUtils.getFormattedOutput(serviceMappings);
         System.out.println(mapping.toString());
+
+
+        // TODO: Added neo4j support
+
+        Driver driver = GraphDatabase.driver(
+                "bolt://localhost:7687", AuthTokens.basic("neo4j", "1234"));
+
+        Session session = driver.session();
+
+        session.run("CREATE (baeldung:Company {name:\"Baeldung\"}) " +
+                "-[:owns]-> (tesla:Car {make: 'tesla', model: 'modelX'})" +
+                "RETURN baeldung, tesla");
+
+        System.out.println(session.isOpen());
+
+        session.close();
+        driver.close();
+
+
+
     }
 
 

@@ -60,23 +60,17 @@ public class App {
         StringBuilder mapping = DockerComposeUtils.getFormattedOutput(serviceMappings);
         System.out.println(mapping.toString());
 
-
-        // TODO: Added neo4j support
-
         Driver driver = GraphDatabase.driver(
                 "bolt://localhost:7687", AuthTokens.basic("neo4j", "1234"));
 
         Session session = driver.session();
 
-        session.run("CREATE (baeldung:Company {name:\"Baeldung\"}) " +
-                "-[:owns]-> (tesla:Car {make: 'tesla', model: 'modelX'})" +
-                "RETURN baeldung, tesla");
+        DockerComposeUtils.saveNodes(serviceMappings, session);
 
-        System.out.println(session.isOpen());
+        DockerComposeUtils.makeRelations(serviceMappings, session);
 
         session.close();
         driver.close();
-
 
 
     }

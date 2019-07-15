@@ -1,12 +1,14 @@
 package com.imranur.microservices.comm.pattern.check.Utils;
 
 import com.imranur.microservices.comm.pattern.check.Models.DockerServices;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.parse.Parser;
 import org.neo4j.driver.Session;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,6 +17,7 @@ public class DockerComposeUtils {
 
     /**
      * TODO: Add javadoc
+     *
      * @param dockerServices
      * @param serviceLists
      * @return
@@ -42,6 +45,7 @@ public class DockerComposeUtils {
 
     /**
      * TODO: Add javadoc
+     *
      * @param fileName
      * @param searchDirectory
      * @return
@@ -58,6 +62,7 @@ public class DockerComposeUtils {
 
     /**
      * TODO: Add javadoc
+     *
      * @param serviceMappings
      * @return
      */
@@ -74,6 +79,7 @@ public class DockerComposeUtils {
 
     /**
      * TODO: Add javadoc
+     *
      * @param serviceMappings
      * @param session
      */
@@ -83,7 +89,7 @@ public class DockerComposeUtils {
             Set<String> strings = entry.get(service);
             strings.forEach(s -> {
                 session.run("MATCH (a:Service {name:" + "\"" + service + "\"" + "})," +
-                        "(b:Service {name:" + "\"" + s + "\"" + "})"+
+                        "(b:Service {name:" + "\"" + s + "\"" + "})" +
                         "CREATE (a) - [r:depends]-> (b)");
             });
 
@@ -92,13 +98,51 @@ public class DockerComposeUtils {
 
     /**
      * TODO: Add javadoc
+     *
      * @param serviceMappings
      * @param session
      */
     public static void saveNodes(ArrayList<Map<String, Set<String>>> serviceMappings, Session session) {
         for (Map<String, Set<String>> entry : serviceMappings) {
             String service = entry.keySet().toString().replace("[", "").replace("]", "");
-            session.run("CREATE (a:Service {name:" + "\"" +service + "\""+ "})");
+            session.run("CREATE (a:Service {name:" + "\"" + service + "\"" + "})");
         }
+    }
+
+    public static void generateGraphImage(String dbName, ArrayList<Map<String, Set<String>>> serviceMappings) throws IOException {
+        File dotFile = new File("output//" + dbName + ".dot");
+
+        if (!dotFile.getParentFile().exists())
+            dotFile.getParentFile().mkdirs();
+        if (!dotFile.exists())
+            dotFile.createNewFile();
+
+        FileWriter fileWriter = new FileWriter(dotFile);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println("digraph {");
+        for (Map<String, Set<String>> entry : serviceMappings) {
+            String service = entry.keySet().toString().replace("[", "").replace("]", "");
+            Set<String> strings = entry.get(service);
+            strings.forEach(s -> printWriter.println(service + "->" + s));
+
+        }
+        printWriter.print("}");
+        printWriter.close();
+
+        MutableGraph g = Parser.read(new FileInputStream(new File("output/" + dbName + ".dot")));
+        Graphviz.fromGraph(g).width(800).render(Format.PNG).toFile(new File("output/" + dbName + ".png"));
+
+        try {
+            Files.deleteIfExists(Paths.get("output/" + dbName + ".dot"));
+        } catch (NoSuchFileException e) {
+            System.out.println("No such file/directory exists");
+        } catch (DirectoryNotEmptyException e) {
+            System.out.println("Directory is not empty.");
+        } catch (IOException e) {
+            System.out.println("Invalid permissions.");
+        }
+
+
+        System.out.println("You can find graph image in output/" + dbName + ".png");
     }
 }

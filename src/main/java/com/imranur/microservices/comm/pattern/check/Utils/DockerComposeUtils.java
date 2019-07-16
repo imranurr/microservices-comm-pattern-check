@@ -123,14 +123,14 @@ public class DockerComposeUtils {
         for (Map<String, Set<String>> entry : serviceMappings) {
             String service = entry.keySet().toString().replace("[", "").replace("]", "");
             Set<String> strings = entry.get(service);
-            strings.forEach(s -> printWriter.println(service + "->" + s));
+            strings.forEach(s -> printWriter.println(service.replace("-","_") + "->" + s.replace("-","_") + "[color=blue]"));
 
         }
         printWriter.print("}");
         printWriter.close();
 
         MutableGraph g = Parser.read(new FileInputStream(new File("output/" + dbName + ".dot")));
-        Graphviz.fromGraph(g).width(800).render(Format.PNG).toFile(new File("output/" + dbName + ".png"));
+        Graphviz.fromGraph(g).width(800).render(Format.SVG).toFile(new File("output/" + dbName + ".svg"));
 
         try {
             Files.deleteIfExists(Paths.get("output/" + dbName + ".dot"));
@@ -143,6 +143,6 @@ public class DockerComposeUtils {
         }
 
 
-        System.out.println("You can find graph image in output/" + dbName + ".png");
+        System.out.println("You can find graph image in output/" + dbName + ".svg");
     }
 }

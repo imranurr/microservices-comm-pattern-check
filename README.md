@@ -18,9 +18,9 @@ An example command to run the tool from command line is,
 
 | Project name  | Github URL | Dependency Graph 
 | ------------- | ------------- | ------------- |
-| FTGO example application | [link](https://github.com/microservices-patterns/ftgo-application) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/ftgo-application-master.svg)|
-| E-Commerce App | [link](https://github.com/venkataravuri/e-commerce-microservices-sample) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/ecommerce-microservices.svg) |
-| Spring PetClinic Application | [link](https://github.com/spring-petclinic/spring-petclinic-microservices) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/Spring-petclinic.svg) |
-| QBike | [link](https://github.com/JoeCao/qbike) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/qbike.png) |
-| Microservice Book Consul Sample | [link](https://github.com/ewolff/microservice-consul) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/consul-master.png) |
-| Microservices Book | [link](https://github.com/ewolff/microservice) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/microservice_sample.png) |
+| FTGO example application | [link](https://github.com/microservices-patterns/ftgo-application) | <a href="resultGraphs/ftgo-application-master.svg" download="ftgo-application-master.svg">View</a> |
+| E-Commerce App | [link](https://github.com/venkataravuri/e-commerce-microservices-sample) | <a href="resultGraphs/ecommerce-microservices.svg" download="ecommerce-microservices.svg">View</a> |
+| Spring PetClinic Application | [link](https://github.com/spring-petclinic/spring-petclinic-microservices) | <a href="resultGraphs/Spring-petclinic.svg" download="Spring-petclinic.svg">View</a> |
+| QBike | [link](https://github.com/JoeCao/qbike) | <a href="resultGraphs/qbike.png" download="qbike.png">View</a> |
+| Microservice Book Consul Sample | [link](https://github.com/ewolff/microservice-consul) | <a href="resultGraphs/consul-master.png" download="consul-master.png">View</a> |
+| Microservices Book | [link](https://github.com/ewolff/microservice) | <a href="resultGraphs/microservice_sample.png" download="microservice_sample.png">View</a> |

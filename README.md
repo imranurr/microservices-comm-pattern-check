@@ -16,10 +16,11 @@ An example command to run the tool from command line is,
 
 # List of projects the tool has been currently tested on
 
-* https://github.com/microservices-patterns/ftgo-application
-* https://github.com/venkataravuri/e-commerce-microservices-sample
-* https://github.com/spring-petclinic/spring-petclinic-microservices
-* https://github.com/kbastani/spring-cloud-microservice-example
-* https://github.com/JoeCao/qbike
-* https://github.com/ewolff/microservice-consul
-* https://github.com/ewolff/microservice
+| Project name  | Github URL | Dependency Graph 
+| ------------- | ------------- | ------------- |
+| FTGO example application | [link](https://github.com/microservices-patterns/ftgo-application) | ------------- |
+| E-Commerce App | [link](https://github.com/venkataravuri/e-commerce-microservices-sample) | ------------- |
+| Spring PetClinic Application | [link](https://github.com/spring-petclinic/spring-petclinic-microservices) | ----- |
+| QBike | [link](https://github.com/JoeCao/qbike) | ------------- |
+| Microservice Book Consul Sample | [link](https://github.com/ewolff/microservice-consul) | ------------- |
+| Microservices Book | [link](https://github.com/ewolff/microservice) | ------------- |

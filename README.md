@@ -18,9 +18,9 @@ An example command to run the tool from command line is,
 
 | Project name  | Github URL | Dependency Graph 
 | ------------- | ------------- | ------------- |
-| FTGO example application | [link](https://github.com/microservices-patterns/ftgo-application) | ------------- |
-| E-Commerce App | [link](https://github.com/venkataravuri/e-commerce-microservices-sample) | ------------- |
-| Spring PetClinic Application | [link](https://github.com/spring-petclinic/spring-petclinic-microservices) | ----- |
-| QBike | [link](https://github.com/JoeCao/qbike) | ------------- |
-| Microservice Book Consul Sample | [link](https://github.com/ewolff/microservice-consul) | ------------- |
-| Microservices Book | [link](https://github.com/ewolff/microservice) | ------------- |
+| FTGO example application | [link](https://github.com/microservices-patterns/ftgo-application) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/ftgo-application-master.svg)|
+| E-Commerce App | [link](https://github.com/venkataravuri/e-commerce-microservices-sample) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/ecommerce-microservices.svg) |
+| Spring PetClinic Application | [link](https://github.com/spring-petclinic/spring-petclinic-microservices) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/Spring-petclinic.svg) |
+| QBike | [link](https://github.com/JoeCao/qbike) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/qbike.png) |
+| Microservice Book Consul Sample | [link](https://github.com/ewolff/microservice-consul) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/consul-master.png) |
+| Microservices Book | [link](https://github.com/ewolff/microservice) | [View](https://raw.githubusercontent.com/clowee/MicroDepGraph/master/resultGraphs/microservice_sample.png) |

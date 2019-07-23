@@ -131,7 +131,7 @@ public class DockerComposeUtils {
         }
         printWriter.print("}");
         printWriter.close();
-
+        // Generating a DOT(graph description language) file
         MutableGraph g = Parser.read(new FileInputStream(new File("output/" + dbName + ".dot")));
         Graphviz.fromGraph(g).width(800).render(Format.SVG).toFile(new File("output/" + dbName + ".svg"));
 

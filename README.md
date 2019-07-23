@@ -13,6 +13,14 @@ Java jdk8 or higher.
 
 An example command to run the tool from command line is,
  java -jar microservices-dependency-check.jar /home/myuser/ftgo-application-master ftgo-application-master
+ 
+# Outputs
+
+After analyzing the project, MicroDepGraph generates dependency graph in three types of export files which are,
+
+1. Neo4j database containing output graph
+2. GraphML file a common format for exchanging graph structure data
+3. An SVG file
 
 # List of projects the tool has been currently tested on
 

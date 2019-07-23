@@ -88,6 +88,9 @@ public class App {
             driver.close();
         }
         */
+
+        DockerComposeUtils.generateGraphMl(dbName, serviceMappings);
+
     }
 
 

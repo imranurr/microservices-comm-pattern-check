@@ -1,5 +1,15 @@
 package com.imranur.microservices.comm.pattern.check;
 
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseException;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.imranur.microservices.comm.pattern.check.Models.DockerServices;
 import com.imranur.microservices.comm.pattern.check.Utils.DBUtilService;
 import com.imranur.microservices.comm.pattern.check.Utils.DockerComposeUtils;
@@ -10,14 +20,17 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * Microservices dependency/communication pattern checking
  */
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
 
         String directory = args[0];
         String dbName = args[1];
@@ -91,7 +104,78 @@ public class App {
 
         DockerComposeUtils.generateGraphMl(dbName, serviceMappings);
 
+        DockerComposeUtils.generateGraphMl(dbName, serviceMappings);
+
+        for (String service : serviceLists){
+            String servicePath = directory + "/" + service;
+            Path folderPath = Paths.get(servicePath);
+            if(Files.exists(folderPath, LinkOption.NOFOLLOW_LINKS)){
+                System.out.println(folderPath + " path found");
+            }
+        }
+
+        //String pathString = "/home/imran/Thesis_Projects/qbike-master/order/src/main/java/club/newtech/qbike/order/controller/OrderController.java";
+        String pathString = "/home/imran/Thesis_Projects/e-commerce-microservices-sample-master/cart-microservice/src/main/java/com/nikhu/ecommerce/cart/CartController.java";
+        //String pathString = "/home/imran/Thesis_Projects/cloud-native-microservice-strangler-example-master/microservices/profile-service/src/main/java/demo/api/v1/ProfileControllerV1.java";
+        File f = new File(pathString);
+        CompilationUnit cu;
+        final FileInputStream in = new FileInputStream(f);
+        try {
+            cu = StaticJavaParser.parse(in);
+        } finally {
+            in.close();
+        }
+        //new MethodVisitor().visit(cu, null);
+
+        new ClassVisitor().visit(cu, null);
+
     }
 
 
+
+    /**
+     * Simple visitor implementation for visiting MethodDeclaration nodes.
+     */
+    private static class MethodVisitor extends VoidVisitorAdapter {
+
+        @Override
+        public void visit(MethodDeclaration n, Object arg) {
+            System.out.println(n.getName());
+            if (n.getAnnotations() != null) {
+                for (AnnotationExpr annotation : n.getAnnotations()) {
+                    System.out.println(annotation.getClass());
+                    // MarkerAnnotations, for example @Test
+                    if (annotation.getClass().equals(MarkerAnnotationExpr.class)) {
+                        System.out.println("MarkerAnnotation:" + ((MarkerAnnotationExpr)annotation).getName());
+                    }
+                    if (annotation.getClass().equals(NormalAnnotationExpr.class)) {
+                        for (MemberValuePair pair : ((NormalAnnotationExpr)annotation).getPairs()) {
+                            if (pair.getName().equals("groups"))
+                                System.out.println("Group:\"" + pair.getValue() + "\"");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    private static class ClassVisitor extends VoidVisitorAdapter {
+        @Override
+        public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+
+            for (AnnotationExpr ann: n.getAnnotations()) {
+                if(ann.toString().equals("@RestController")){
+                    n.getMembers().stream().forEach(bodyDeclaration -> {
+                        for (AnnotationExpr mappingAnnotation : bodyDeclaration.getAnnotations()){
+                            if (mappingAnnotation.toString().startsWith("@") && mappingAnnotation.toString().endsWith(")") && mappingAnnotation.toString().contains("Mapping")) {
+                                //System.out.println(mappingAnnotation);
+                                int i = mappingAnnotation.toString().indexOf('/');
+                                String substring = mappingAnnotation.toString().substring(i + 1);
+                                System.out.println(substring.split("\\/")[0]);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
 }

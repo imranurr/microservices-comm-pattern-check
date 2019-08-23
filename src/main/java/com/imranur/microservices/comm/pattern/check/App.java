@@ -25,6 +25,9 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Microservices dependency/communication pattern checking
@@ -79,7 +82,7 @@ public class App {
         StringBuilder mapping = DockerComposeUtils.getFormattedOutput(serviceMappings);
         System.out.println(mapping.toString());
 
-        DockerComposeUtils.generateGraphImage(dbName, serviceMappings);
+        //DockerComposeUtils.generateGraphImage(dbName, serviceMappings);
 
 
         GraphDatabaseService graphDb = DBUtilService.getGraphDatabaseService(dbName);
@@ -105,18 +108,27 @@ public class App {
         DockerComposeUtils.generateGraphMl(dbName, serviceMappings);
 
         DockerComposeUtils.generateGraphMl(dbName, serviceMappings);
-
+        ArrayList<Path> servicePaths = new ArrayList<>();
         for (String service : serviceLists){
             String servicePath = directory + "/" + service;
             Path folderPath = Paths.get(servicePath);
             if(Files.exists(folderPath, LinkOption.NOFOLLOW_LINKS)){
-                System.out.println(folderPath + " path found");
+                //System.out.println(folderPath + " path found");
+                servicePaths.add(folderPath);
             }
         }
 
         //String pathString = "/home/imran/Thesis_Projects/qbike-master/order/src/main/java/club/newtech/qbike/order/controller/OrderController.java";
         String pathString = "/home/imran/Thesis_Projects/e-commerce-microservices-sample-master/cart-microservice/src/main/java/com/nikhu/ecommerce/cart/CartController.java";
         //String pathString = "/home/imran/Thesis_Projects/cloud-native-microservice-strangler-example-master/microservices/profile-service/src/main/java/demo/api/v1/ProfileControllerV1.java";
+
+        try (Stream<Path> paths = Files.walk(Paths.get("/home/imran/Thesis_Projects/qbike-master/intention"))) {
+            paths
+                    .filter(Files::isRegularFile)
+                    .forEach(System.out::println);
+        }
+
+
         File f = new File(pathString);
         CompilationUnit cu;
         final FileInputStream in = new FileInputStream(f);
@@ -125,6 +137,17 @@ public class App {
         } finally {
             in.close();
         }
+
+        for (Path servicePath : servicePaths) {
+            try (Stream<Path> stream = Files.find(servicePath, 10,
+                    (path, attr) -> path.getFileName().toString().endsWith(".java"))) {
+                System.out.println(stream.findAny().isPresent());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         //new MethodVisitor().visit(cu, null);
 
         new ClassVisitor().visit(cu, null);
@@ -143,7 +166,7 @@ public class App {
             System.out.println(n.getName());
             if (n.getAnnotations() != null) {
                 for (AnnotationExpr annotation : n.getAnnotations()) {
-                    System.out.println(annotation.getClass());
+                    //System.out.println(annotation.getClass());
                     // MarkerAnnotations, for example @Test
                     if (annotation.getClass().equals(MarkerAnnotationExpr.class)) {
                         System.out.println("MarkerAnnotation:" + ((MarkerAnnotationExpr)annotation).getName());
@@ -168,9 +191,15 @@ public class App {
                         for (AnnotationExpr mappingAnnotation : bodyDeclaration.getAnnotations()){
                             if (mappingAnnotation.toString().startsWith("@") && mappingAnnotation.toString().endsWith(")") && mappingAnnotation.toString().contains("Mapping")) {
                                 //System.out.println(mappingAnnotation);
+                                String regex = "^[a-zA-Z0-9]+$";
+                                Pattern pattern = Pattern.compile(regex);
                                 int i = mappingAnnotation.toString().indexOf('/');
                                 String substring = mappingAnnotation.toString().substring(i + 1);
-                                System.out.println(substring.split("\\/")[0]);
+                                String s = substring.split("\\/")[0];
+                                Matcher matcher = pattern.matcher(s);
+                                if(matcher.matches()){
+                                    System.out.println(s);
+                                }
                             }
                         }
                     });

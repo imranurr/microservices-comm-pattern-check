@@ -20,10 +20,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -122,13 +119,39 @@ public class App {
         String pathString = "/home/imran/Thesis_Projects/e-commerce-microservices-sample-master/cart-microservice/src/main/java/com/nikhu/ecommerce/cart/CartController.java";
         //String pathString = "/home/imran/Thesis_Projects/cloud-native-microservice-strangler-example-master/microservices/profile-service/src/main/java/demo/api/v1/ProfileControllerV1.java";
 
-        try (Stream<Path> paths = Files.walk(Paths.get("/home/imran/Thesis_Projects/qbike-master/intention"))) {
-            paths
-                    .filter(Files::isRegularFile)
-                    .forEach(System.out::println);
+
+
+
+//        try (Stream<Path> paths = Files.walk(Paths.get("/home/imran/Thesis_Projects/qbike-master/intention"))) {
+//            paths
+//                    .filter(Files::isRegularFile)
+//                    .forEach(System.out::println);
+//        }
+
+
+
+
+        for (Path servicePath : servicePaths) {
+            try (Stream<Path> stream = Files.find(servicePath, 10,
+                    (path, attr) -> path.getFileName().toString().endsWith(".java"))) {
+                stream.forEach(path -> {
+                    try {
+                        parseClasses(path.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        parseClasses(pathString);
 
 
+    }
+
+    private static void parseClasses(String pathString) throws IOException {
+        //new MethodVisitor().visit(cu, null);
         File f = new File(pathString);
         CompilationUnit cu;
         final FileInputStream in = new FileInputStream(f);
@@ -137,23 +160,8 @@ public class App {
         } finally {
             in.close();
         }
-
-        for (Path servicePath : servicePaths) {
-            try (Stream<Path> stream = Files.find(servicePath, 10,
-                    (path, attr) -> path.getFileName().toString().endsWith(".java"))) {
-                System.out.println(stream.findAny().isPresent());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        //new MethodVisitor().visit(cu, null);
-
         new ClassVisitor().visit(cu, null);
-
     }
-
 
 
     /**
@@ -190,7 +198,7 @@ public class App {
                     n.getMembers().stream().forEach(bodyDeclaration -> {
                         for (AnnotationExpr mappingAnnotation : bodyDeclaration.getAnnotations()){
                             if (mappingAnnotation.toString().startsWith("@") && mappingAnnotation.toString().endsWith(")") && mappingAnnotation.toString().contains("Mapping")) {
-                                //System.out.println(mappingAnnotation);
+                                System.out.println(mappingAnnotation);
                                 String regex = "^[a-zA-Z0-9]+$";
                                 Pattern pattern = Pattern.compile(regex);
                                 int i = mappingAnnotation.toString().indexOf('/');
